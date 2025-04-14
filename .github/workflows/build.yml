@@ -20,29 +20,36 @@ jobs:
       - name: Install Nativefier
         run: npm install -g nativefier
 
-      - name: Create Directories
-        run: |
-          New-Item -Path "dist/Gymanager-win32-x64" -ItemType Directory -Force
-
       - name: Build WebView App
         run: |
-          nativefier `
-            --name "Gymanager" `
-            --platform windows `
-            --icon "${{ github.workspace }}/assets/gymanager.ico" `
-            --out "${{ github.workspace }}/dist" `
-            "https://www.gym.etecxperts.com" || exit 1
+          # Create output directory
+          mkdir -p dist
+          # Run Nativefier with absolute path
+          nativefier \
+            --name "Gymanager" \
+            --platform windows \
+            --icon "$(Get-Location)/assets/gymanager.ico" \
+            --out ./dist \
+            "https://www.gym.etecxperts.com"
+          # Verify build
+          ls -R ./dist
 
-      - name: Package EXE
+      - name: Package and Upload
         run: |
-          Compress-Archive `
-            -Path "${{ github.workspace }}/dist/Gymanager-win32-x64/*" `
-            -DestinationPath "${{ github.workspace }}/Gymanager.zip"
+          # Zip the directory
+          $exePath = "./dist/Gymanager-win32-x64/Gymanager.exe"
+          if (Test-Path $exePath) {
+            Compress-Archive -Path ./dist/Gymanager-win32-x64/* -DestinationPath ./Gymanager.zip
+            Write-Output "Package created at $((Get-Item ./Gymanager.zip).FullName)"
+          } else {
+            Write-Error "EXE file not found at $exePath"
+            exit 1
+          }
 
-      - name: Upload Executable
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Gymanager-App
           path: |
-            ${{ github.workspace }}/Gymanager.zip
-            ${{ github.workspace }}/dist/Gymanager-win32-x64/Gymanager.exe
+            ./Gymanager.zip
+            ./dist/Gymanager-win32-x64/
