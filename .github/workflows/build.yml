@@ -2,8 +2,7 @@ name: Build Gymanager WebView App
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -11,21 +10,32 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4  # Updated to v4
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4  # Updated to v4
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'  # Consider using Node.js 20 (LTS)
+          node-version: '20'
 
       - name: Install Nativefier
         run: npm install -g nativefier
 
       - name: Build the WebView App
-        run: nativefier --name "Gymanager" --platform windows --icon "./assets/gymanager.ico" "https://www.gym.etecxperts.com"
+        run: |
+          nativefier \
+          --name "Gymanager" \
+          --platform windows \
+          --icon "./assets/gymanager.ico" \
+          --out ./dist \
+          "https://www.gym.etecxperts.com"
 
-      - name: Upload .exe as artifact
-        uses: actions/upload-artifact@v4  # Updated to latest v4
+      - name: List build directory (debug)
+        run: dir .\dist\ /s
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: Gymanager-Windows-App
-          path: Gymanager-win32-x64/
+          name: Gymanager-App
+          path: |
+            dist/Gymanager-win32-x64/
+            dist/Gymanager-win32-x64/Gymanager.exe
