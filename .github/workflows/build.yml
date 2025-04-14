@@ -3,34 +3,34 @@ name: Build Gymanager WebView App
 on:
   push:
     branches:
-      - main
+      - main  # Trigger the workflow when code is pushed to the main branch
 
 jobs:
   build:
-    runs-on: windows-latest  # This ensures the job runs on a Windows machine
+    runs-on: windows-latest  # Use the latest Windows runner to build the app
 
     steps:
-      # Step 1: Check out the repository code
+      # Step 1: Checkout the code from the repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js environment
+      # Step 2: Set up Node.js for the build process
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '16'  # Specify the Node.js version to use
 
-      # Step 3: Install Nativefier globally
+      # Step 3: Install Nativefier globally using npm
       - name: Install Nativefier
         run: npm install -g nativefier
 
-      # Step 4: Build the app using Nativefier
+      # Step 4: Build the WebView app using Nativefier
       - name: Build the WebView App
         run: nativefier --name "Gymanager" --icon "./assets/gymanager.ico" "https://www.gym.etecxperts.com"
 
-      # Step 5: Upload the generated `.exe` as an artifact
+      # Step 5: Upload the generated .exe as an artifact
       - name: Upload .exe as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Gymanager-Windows-App
-          path: "./Gymanager.exe"  # Adjust the path to where the `.exe` is located
+          name: Gymanager-Windows-App  # Name for the artifact
+          path: "./Gymanager.exe"  # Path to the generated .exe file
