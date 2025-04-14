@@ -10,27 +10,32 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Run on Windows
+    runs-on: windows-latest  # Runs on Windows environment to build the .exe
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Set Node.js version you prefer
 
-    - name: Install dependencies
-      run: |
-        npm install -g nativefier
+      # Install Nativefier globally
+      - name: Install Nativefier
+        run: |
+          npm install -g nativefier
 
-    - name: Build Gymanager WebView App for Windows
-      run: |
-        nativefier "https://www.gym.etecxperts.com" --name "Gymanager" --icon "path/to/icon.ico" --platform windows
+      # Build the app for Windows
+      - name: Build Gymanager WebView App for Windows
+        run: |
+          nativefier "https://www.gym.etecxperts.com" --name "Gymanager" --icon "path/to/icon.ico" --platform windows
 
-    - name: Upload app artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: Gymanager-Windows-App
-        path: ./GymanagerSetup.exe  # Path to the .exe file after it's created
+      # Upload the .exe artifact (Windows app)
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Gymanager-Windows-App
+          path: ./GymanagerSetup.exe  # Specify the path to the .exe after it's created
