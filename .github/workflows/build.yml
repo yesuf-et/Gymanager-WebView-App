@@ -20,14 +20,26 @@ jobs:
       - name: Install Nativefier
         run: npm install -g nativefier
 
+      - name: Create output directory
+        run: New-Item -Path "./dist" -ItemType Directory -Force
+
       - name: Build the WebView App
-        run: nativefier --name "Gymanager" --platform windows --icon "./assets/gymanager.ico" --out ./dist "https://www.gym.etecxperts.com"
+        run: |
+          nativefier `
+            --name "Gymanager" `
+            --platform windows `
+            --icon "./assets/gymanager.ico" `
+            --out ./dist `
+            "https://www.gym.etecxperts.com"
+        shell: pwsh
 
       - name: Verify build output
-        run: Get-ChildItem -Path .\dist\ -Recurse
+        run: |
+          Write-Output "Build output contents:"
+          Get-ChildItem -Path ./dist -Recurse
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: Gymanager-App
-          path: dist/
+          path: ./dist
