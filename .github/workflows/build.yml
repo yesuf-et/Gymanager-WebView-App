@@ -10,27 +10,27 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Run on Windows
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
 
-      - name: Install dependencies
-        run: |
-          npm install
-      
-      - name: Build Gymanager App
-        run: |
-          nativefier "https://www.gym.etecxperts.com" --name "Gymanager" --icon "path/to/icon.icns"
-      
-      - name: Upload app artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Gymanager-App
-          path: ./path/to/app/output
+    - name: Install dependencies
+      run: |
+        npm install -g nativefier
+
+    - name: Build Gymanager WebView App for Windows
+      run: |
+        nativefier "https://www.gym.etecxperts.com" --name "Gymanager" --icon "path/to/icon.ico" --platform windows
+
+    - name: Upload app artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Gymanager-Windows-App
+        path: ./GymanagerSetup.exe  # Path to the .exe file after it's created
