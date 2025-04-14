@@ -21,13 +21,7 @@ jobs:
         run: npm install -g nativefier
 
       - name: Build the WebView App
-        run: |
-          nativefier `
-            --name "Gymanager" `
-            --platform windows `
-            --icon "./assets/gymanager.ico" `
-            --out ./dist `
-            "https://www.gym.etecxperts.com"
+        run: nativefier --name "Gymanager" --platform windows --icon "./assets/gymanager.ico" --out ./dist "https://www.gym.etecxperts.com"
 
       - name: Verify build output
         run: Get-ChildItem -Path .\dist\ -Recurse
